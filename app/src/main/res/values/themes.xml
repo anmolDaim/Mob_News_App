@@ -1,0 +1,48 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.NewsApplication" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+<!--        <item name="colorPrimary">@android:color/black</item>-->
+        <item name="android:statusBarColor">@android:color/white</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="colorControlActivated">@android:color/black</item> <!-- CheckBox checked color -->
+        <item name="colorControlNormal">@android:color/black</item> <!-- CheckBox normal color -->
+    </style>
+    <style name="Base.Theme.NewsApplication.Splash" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <item name="colorPrimary">@android:color/white</item>
+        <item name="android:statusBarColor">@color/splash_green</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+    <style name="Base.Theme.NewsApplication.exoplayer" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <item name="colorPrimary">@android:color/white</item>
+        <item name="android:statusBarColor">@color/black</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+    <style name="Theme.NewsApplication" parent="Base.Theme.NewsApplication" />
+
+    <style name="Widget.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:theme">@style/NoRippleTheme</item>
+    </style>
+    <style name="NoRippleTheme">
+        <item name="android:colorControlHighlight">@android:color/transparent</item>
+    </style>
+
+    <style name="CustomAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <!-- Customize AlertDialog attributes -->
+        <item name="android:windowBackground">@drawable/dialog_background</item>
+        <item name="android:background">@drawable/dialog_background</item>
+    </style>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here -->
+        <item name="colorAccent">@color/green</item>
+        <item name="colorPrimary">@color/white</item>
+        <item name="android:statusBarColor">@color/white</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <!-- This is the default color for the radio button -->
+    </style>
+
+</resources>

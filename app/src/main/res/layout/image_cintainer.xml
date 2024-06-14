@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:cardCornerRadius="12dp">
+
+    <ImageView
+        android:id="@+id/ViewPagerImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/food3" />
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/image_btm_overlay"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/authorViewPager"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="16dp"
+            android:text="Karen Gilchrist"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/font_size_13"
+            android:maxLines="1"
+            android:fontFamily="@font/lato_bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/contentViewPager"
+            android:layout_width="@dimen/widget_size_220"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="@font/lato_bold"
+            android:maxLines="2"
+            android:text="Food and eating out costs drive fall in inflation - BBC.com"
+            android:textColor="#FFFFFFFF"
+            android:textSize="@dimen/font_size_18"
+            app:layout_constraintBottom_toTopOf="@+id/authorViewPager"
+            app:layout_constraintStart_toStartOf="@+id/authorViewPager" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.cardview.widget.CardView>

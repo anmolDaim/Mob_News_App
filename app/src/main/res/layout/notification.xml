@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/imageNotification"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logo" />
+
+    <TextView
+        android:id="@+id/titleNotification"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="Title"
+        android:textColor="@color/black"
+        android:fontFamily="@font/lato_bold"
+        android:textSize="@dimen/font_size_18"
+        app:layout_constraintStart_toEndOf="@+id/imageNotification"
+        app:layout_constraintTop_toTopOf="@+id/imageNotification" />
+
+    <TextView
+        android:id="@+id/messageNotification"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/lato_bold"
+        android:text="This is message"
+        android:textColor="@color/lightGrey"
+        android:textSize="@dimen/font_size_15"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/titleNotification"
+        app:layout_constraintTop_toBottomOf="@+id/titleNotification" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.4.0" type="baseline" client="gradle" dependencies="false" name="AGP (8.4.0)" variant="fatal" version="8.4.0">
+
+    <issue
+        id="UnknownId"
+        message="The id &quot;`imageView7`&quot; is not defined anywhere. Did you mean imageView ?"
+        errorLine1="            app:layout_constraintTop_toTopOf=&quot;@+id/imageView7&quot;>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_login.xml"
+            line="88"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnknownId"
+        message="The id &quot;`imageView2`&quot; is not defined anywhere. Did you mean imageView ?"
+        errorLine1="                app:layout_constraintStart_toEndOf=&quot;@+id/imageView2&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_register.xml"
+            line="98"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="DuplicateIds"
+        message="Duplicate id `@+id/searchBtn`, already defined earlier in this layout"
+        errorLine1="            android:id=&quot;@+id/searchBtn&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_login.xml"
+            line="80"
+            column="13"/>
+        <location
+            file="src/main/res/layout/activity_login.xml"
+            line="37"
+            column="13"
+            message="Duplicate id `@+id/searchBtn` originally defined here"/>
+    </issue>
+
+    <issue
+        id="DuplicateIds"
+        message="Duplicate id `@+id/searchBtn`, already defined earlier in this layout"
+        errorLine1="            android:id=&quot;@+id/searchBtn&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_register.xml"
+            line="76"
+            column="13"/>
+        <location
+            file="src/main/res/layout/activity_register.xml"
+            line="36"
+            column="13"
+            message="Duplicate id `@+id/searchBtn` originally defined here"/>
+    </issue>
+
+    <issue
+        id="DuplicateIds"
+        message="Duplicate id `@+id/searchBtn`, already defined earlier in this layout"
+        errorLine1="            android:id=&quot;@+id/searchBtn&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_register.xml"
+            line="117"
+            column="13"/>
+        <location
+            file="src/main/res/layout/activity_register.xml"
+            line="36"
+            column="13"
+            message="Duplicate id `@+id/searchBtn` originally defined here"/>
+    </issue>
+
+    <issue
+        id="DuplicateIds"
+        message="Duplicate id `@+id/textView6`, already defined earlier in this layout"
+        errorLine1="                    android:id=&quot;@+id/textView6&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_profile.xml"
+            line="177"
+            column="21"/>
+        <location
+            file="src/main/res/layout/fragment_profile.xml"
+            line="122"
+            column="21"
+            message="Duplicate id `@+id/textView6` originally defined here"/>
+    </issue>
+
+    <issue
+        id="DuplicateIds"
+        message="Duplicate id `@+id/textView11`, already defined earlier in this layout"
+        errorLine1="                    android:id=&quot;@+id/textView11&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_profile.xml"
+            line="191"
+            column="21"/>
+        <location
+            file="src/main/res/layout/fragment_profile.xml"
+            line="134"
+            column="21"
+            message="Duplicate id `@+id/textView11` originally defined here"/>
+    </issue>
+
+    <issue
+        id="DuplicateIds"
+        message="Duplicate id `@+id/textView6`, already defined earlier in this layout"
+        errorLine1="                    android:id=&quot;@+id/textView6&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_profile.xml"
+            line="234"
+            column="21"/>
+        <location
+            file="src/main/res/layout/fragment_profile.xml"
+            line="122"
+            column="21"
+            message="Duplicate id `@+id/textView6` originally defined here"/>
+    </issue>
+
+    <issue
+        id="DuplicateIds"
+        message="Duplicate id `@+id/textView11`, already defined earlier in this layout"
+        errorLine1="                    android:id=&quot;@+id/textView11&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_profile.xml"
+            line="247"
+            column="21"/>
+        <location
+            file="src/main/res/layout/fragment_profile.xml"
+            line="134"
+            column="21"
+            message="Duplicate id `@+id/textView11` originally defined here"/>
+    </issue>
+
+    <issue
+        id="DuplicateIds"
+        message="Duplicate id `@+id/favouriteNews`, already defined earlier in this layout"
+        errorLine1="                    android:id=&quot;@+id/favouriteNews&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_profile.xml"
+            line="257"
+            column="21"/>
+        <location
+            file="src/main/res/layout/fragment_profile.xml"
+            line="144"
+            column="21"
+            message="Duplicate id `@+id/favouriteNews` originally defined here"/>
+    </issue>
+
+    <issue
+        id="DuplicateIds"
+        message="Duplicate id `@+id/textView6`, already defined earlier in this layout"
+        errorLine1="                    android:id=&quot;@+id/textView6&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_profile.xml"
+            line="292"
+            column="21"/>
+        <location
+            file="src/main/res/layout/fragment_profile.xml"
+            line="122"
+            column="21"
+            message="Duplicate id `@+id/textView6` originally defined here"/>
+    </issue>
+
+    <issue
+        id="DuplicateIds"
+        message="Duplicate id `@+id/textView6`, already defined earlier in this layout"
+        errorLine1="                    android:id=&quot;@+id/textView6&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_profile.xml"
+            line="326"
+            column="21"/>
+        <location
+            file="src/main/res/layout/fragment_profile.xml"
+            line="122"
+            column="21"
+            message="Duplicate id `@+id/textView6` originally defined here"/>
+    </issue>
+
+    <issue
+        id="DuplicateIds"
+        message="Duplicate id `@+id/textView11`, already defined earlier in this layout"
+        errorLine1="                    android:id=&quot;@+id/textView11&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_profile.xml"
+            line="339"
+            column="21"/>
+        <location
+            file="src/main/res/layout/fragment_profile.xml"
+            line="134"
+            column="21"
+            message="Duplicate id `@+id/textView11` originally defined here"/>
+    </issue>
+
+    <issue
+        id="DuplicateIds"
+        message="Duplicate id `@+id/textView6`, already defined earlier in this layout"
+        errorLine1="                    android:id=&quot;@+id/textView6&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_profile.xml"
+            line="382"
+            column="21"/>
+        <location
+            file="src/main/res/layout/fragment_profile.xml"
+            line="122"
+            column="21"
+            message="Duplicate id `@+id/textView6` originally defined here"/>
+    </issue>
+
+    <issue
+        id="DuplicateIds"
+        message="Duplicate id `@+id/textView6`, already defined earlier in this layout"
+        errorLine1="                    android:id=&quot;@+id/textView6&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_profile.xml"
+            line="406"
+            column="21"/>
+        <location
+            file="src/main/res/layout/fragment_profile.xml"
+            line="122"
+            column="21"
+            message="Duplicate id `@+id/textView6` originally defined here"/>
+    </issue>
+
+    <issue
+        id="DuplicateIds"
+        message="Duplicate id `@+id/constraintLayout7`, already defined earlier in this layout"
+        errorLine1="                    android:id=&quot;@+id/constraintLayout7&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_profile.xml"
+            line="451"
+            column="21"/>
+        <location
+            file="src/main/res/layout/fragment_profile.xml"
+            line="349"
+            column="21"
+            message="Duplicate id `@+id/constraintLayout7` originally defined here"/>
+    </issue>
+
+    <issue
+        id="NotSibling"
+        message="`@+id/backBtn` is not a sibling in the same `ConstraintLayout`"
+        errorLine1="        app:layout_constraintStart_toEndOf=&quot;@+id/backBtn&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_login.xml"
+            line="76"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="NotSibling"
+        message="`@+id/view2` is not a sibling in the same `ConstraintLayout`"
+        errorLine1="                app:layout_constraintTop_toBottomOf=&quot;@+id/view2&quot;>"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_profile.xml"
+            line="79"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="NotSibling"
+        message="`@+id/cacheImage` is not a sibling in the same `ConstraintLayout`"
+        errorLine1="                    app:layout_constraintBottom_toBottomOf=&quot;@+id/cacheImage&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_profile.xml"
+            line="242"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="NotSibling"
+        message="`@+id/textView11` is not a sibling in the same `ConstraintLayout`"
+        errorLine1="                    app:layout_constraintBottom_toTopOf=&quot;@+id/textView11&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_profile.xml"
+            line="301"
+            column="21"/>
+    </issue>
+
+</issues>

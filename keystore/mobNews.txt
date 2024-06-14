@@ -1,0 +1,20 @@
+release password: anmol123
+key alias: key0
+jks location: E:\jks file\mobNews.jks
+
+PS C:\Program Files\Android\Android Studio\jbr\bin> ./keytool -list -v -keystore "E:\jks file\mobNews.jks" -alias key0 -storepass anmol123 -keypass anmol123
+Alias name: key0
+Creation date: 14-May-2024
+Entry type: PrivateKeyEntry
+Certificate chain length: 1
+Certificate[1]:
+Owner: C=91, ST=Haryana, L=Panipat, O=Android Developer, OU=Anmol Daim, CN=Anmol Daim
+Issuer: C=91, ST=Haryana, L=Panipat, O=Android Developer, OU=Anmol Daim, CN=Anmol Daim
+Serial number: 1
+Valid from: Tue May 14 17:18:09 IST 2024 until: Sat May 08 17:18:09 IST 2049
+Certificate fingerprints:
+         SHA1: 98:34:6C:4C:26:3C:1C:29:54:69:10:D4:B7:13:2F:B5:80:32:42:88
+         SHA256: 92:77:A7:9B:A4:37:C7:7B:BD:F0:EB:8C:13:A8:C3:A4:6F:E9:47:92:6E:8F:0F:DA:65:56:59:CF:7E:F7:EA:D9
+Signature algorithm name: SHA256withRSA
+Subject Public Key Algorithm: 2048-bit RSA key
+Version: 1

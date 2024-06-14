@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="green">#388E01</color>
+    <color name="darkGrey">#1A1A1A</color>
+    <color name="lightGrey">#5C5C5C</color>
+    <color name="grey">#DDDADA</color>
+    <color name="brown">#7E5343</color>
+    <color name="blue">#8454C7</color>
+    <color name="navyBlue">#009886</color>
+    <color name="orange">#FF5722</color>
+    <color name="pink">#E91E63</color>
+    <color name="yellow">#FF9800</color>
+    <color name="skyBlue">#2196F3</color>
+    <color name="dialog_background">#CAE4F8</color>
+    //F3F1F1
+    <color name="cat_bg">#F3F1F1</color>
+    //49AE09
+    <color name="splash_green">#49AE09</color>
+    <color name="checkbox_checked_light">#000000</color> <!-- Black for light theme -->
+    <color name="checkbox_unchecked_light">#000000</color> <!-- Black for light theme -->
+    <color name="checkbox_checked_tick_light">#FFFFFF</color> <!-- White tick mark for light theme -->
+
+</resources>

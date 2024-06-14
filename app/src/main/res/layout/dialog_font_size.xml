@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Font Size"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:fontFamily="@font/lato_bold"
+        android:textColor="@color/green"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="16dp" />
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/radioButtonSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="@font/lato_bold"
+            android:textSize="@dimen/font_size_14"
+            android:text="Small"
+            android:buttonTint="@color/green"/>
+
+        <RadioButton
+            android:id="@+id/radioButtonMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="@font/lato_bold"
+            android:textSize="@dimen/font_size_14"
+            android:text="Medium"
+            android:buttonTint="@color/green"/>
+
+        <RadioButton
+            android:id="@+id/radioButtonLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="@font/lato_bold"
+            android:textSize="@dimen/font_size_14"
+            android:text="Large"
+            android:buttonTint="@color/green"/>
+
+    </RadioGroup>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/buttonApply"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/dark_mode_btn"
+        android:textColor="@color/green"
+        android:text="Apply"
+        android:layout_marginTop="16dp"/>
+
+</LinearLayout>
