@@ -63,6 +63,7 @@ class ReadingActivity : AppCompatActivity(), ItemsAdapter.OnFavoriteSelectedList
     lateinit var shareReading:ConstraintLayout
     lateinit var favouriteReading:ConstraintLayout
     lateinit var fontSizeReading:ConstraintLayout
+    private var isFavorite: Boolean = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -126,6 +127,8 @@ class ReadingActivity : AppCompatActivity(), ItemsAdapter.OnFavoriteSelectedList
             showFontSizeDialog()
         }
 
+//        val isFavorite = intent.getBooleanExtra("isFavorite", false)
+//        updateFavoriteReadingUI(isFavorite)
 
         // Get intent data
         // Retrieve article data from intent extras
@@ -188,7 +191,7 @@ class ReadingActivity : AppCompatActivity(), ItemsAdapter.OnFavoriteSelectedList
         val fullNewsSourceString = "$newsSourceString$url"
         val spannedNewsSourceString = SpannableString(fullNewsSourceString)
         val greenColor = ContextCompat.getColor(this, R.color.green)
-        val blackColor = ContextCompat.getColor(this, R.color.black)
+        val blackColor = ContextCompat.getColor(this, R.color.skyBlue)
         spannedNewsSourceString.setSpan(
             ForegroundColorSpan(greenColor),
             0,
@@ -333,28 +336,39 @@ fetchTopHeadlines("Hot News")
         val existingArticleList: MutableList<Data1.Article> = gson.fromJson(articleListJson, type) ?: mutableListOf()
 
         // Check if the article already exists in the list
-        if (existingArticleList.any { it.title == article.title }) {
-            Toast.makeText(this, "You already added this item", Toast.LENGTH_SHORT).show()
-            return
+        val existingArticle = existingArticleList.find { it.title == article.title }
+
+        if (existingArticle != null) {
+            // Remove the article from the existing list
+            existingArticleList.remove(existingArticle)
+
+            // Convert the updated list to JSON string
+            val updatedArticleListJson = gson.toJson(existingArticleList)
+
+            // Store the updated JSON string in SharedPreferences
+            editor.putString("articleList", updatedArticleListJson)
+            editor.apply()
+
+            Toast.makeText(this, "Removed from favorites", Toast.LENGTH_SHORT).show()
+
+            // Notify the adapter about the item removal
+            (suggestedRecyclerView.adapter as ItemsAdapter).unmarkAsFavorite(article)
+        } else {
+            // Add the new article to the existing list
+            existingArticleList.add(article)
+
+            // Convert the updated list to JSON string
+            val updatedArticleListJson = gson.toJson(existingArticleList)
+
+            // Store the updated JSON string in SharedPreferences
+            editor.putString("articleList", updatedArticleListJson)
+            editor.apply()
+
+            Toast.makeText(this, "Added to favorites", Toast.LENGTH_SHORT).show()
+
+            // Notify the adapter about the item change
+            (suggestedRecyclerView.adapter as ItemsAdapter).markAsFavorite(article)
         }
-
-        // Add the new article to the existing list
-        existingArticleList.add(article)
-
-        // Convert the updated list to JSON string
-        val updatedArticleListJson = gson.toJson(existingArticleList)
-
-        // Store the updated JSON string in SharedPreferences
-        editor.putString("articleList", updatedArticleListJson)
-        editor.apply()
-
-        Toast.makeText(this, "Added successfully", Toast.LENGTH_SHORT).show()
-
-//        // Navigate to the SavedFragment
-//        parentFragmentManager.commit {
-//            replace(R.id.fragment_container, SavedFragment())
-//            addToBackStack(null)
-//        }
     }
 
 
@@ -434,12 +448,16 @@ fetchTopHeadlines("Hot News")
                                     putExtra("urlToChrome", article.url)
                                     putExtra("defaultImageResId", R.drawable.no_image_placeholder)
                                     putExtra("categoryCode", categoryCode)
+                                    putExtra("isFavorite", isArticleFavorite(article))
                                 }
                                 startActivity(intent)
                             },
                             this@ReadingActivity
                         )
                         // Set the onClickListener for the favoriteReading view
+                        val isFavorite = intent.getBooleanExtra("isFavorite", false)
+                        updateFavoriteReadingUI(isFavorite)
+
                         favouriteReading.setOnClickListener {
                             val currentArticle = Article(
                                 author = authortextView.text.toString(),
@@ -452,9 +470,10 @@ fetchTopHeadlines("Hot News")
                                 urlToImage = intent.getStringExtra("urlToImage") ?: ""
                             )
                             onFavoriteSelected(currentArticle)
+                            // Update UI of favouriteReading view
+                            updateFavoriteReadingUI(!isFavorite)
                         }
                         suggestedRecyclerView.adapter = catAdapter
-
 
                         progressBar2.visibility = View.GONE
 
@@ -512,11 +531,14 @@ fetchTopHeadlines("Hot News")
                                     putExtra("urlToChrome", article.url)
                                     putExtra("defaultImageResId", R.drawable.no_image_placeholder)
                                     putExtra("categoryCode", categoryCode)
+                                    putExtra("isFavorite", isArticleFavorite(article))
                                 }
                                 startActivity(intent)
                             },
                             this@ReadingActivity
                         )
+                        val isFavorite = intent.getBooleanExtra("isFavorite", false)
+                        updateFavoriteReadingUI(isFavorite)
                         // Set the onClickListener for the favoriteReading view
                         favouriteReading.setOnClickListener {
                             val currentArticle = Article(
@@ -530,6 +552,8 @@ fetchTopHeadlines("Hot News")
                                 urlToImage = intent.getStringExtra("urlToImage") ?: ""
                             )
                             onFavoriteSelected(currentArticle)
+                            // Update UI of favouriteReading view
+                            updateFavoriteReadingUI(!isFavorite)
                         }
                         suggestedRecyclerView.adapter = catAdapter
 
@@ -589,11 +613,14 @@ fetchTopHeadlines("Hot News")
                                     putExtra("urlToChrome", article.url)
                                     putExtra("defaultImageResId", R.drawable.no_image_placeholder)
                                     putExtra("categoryCode", categoryCode)
+                                    putExtra("isFavorite", isArticleFavorite(article))
                                 }
                                 startActivity(intent)
                             },
                             this@ReadingActivity
                         )
+                        val isFavorite = intent.getBooleanExtra("isFavorite", false)
+                        updateFavoriteReadingUI(isFavorite)
                         // Set the onClickListener for the favoriteReading view
                         favouriteReading.setOnClickListener {
                             val currentArticle = Article(
@@ -607,6 +634,8 @@ fetchTopHeadlines("Hot News")
                                 urlToImage = intent.getStringExtra("urlToImage") ?: ""
                             )
                             onFavoriteSelected(currentArticle)
+                            // Update UI of favouriteReading view
+                            updateFavoriteReadingUI(!isFavorite)
                         }
                         suggestedRecyclerView.adapter = catAdapter
 
@@ -667,11 +696,14 @@ fetchTopHeadlines("Hot News")
                                     putExtra("urlToChrome", article.url)
                                     putExtra("defaultImageResId", R.drawable.no_image_placeholder)
                                     putExtra("categoryCode", categoryCode)
+                                    putExtra("isFavorite", isArticleFavorite(article))
                                 }
                                 startActivity(intent)
                             },
                             this@ReadingActivity
                         )
+                        val isFavorite = intent.getBooleanExtra("isFavorite", false)
+                        updateFavoriteReadingUI(isFavorite)
                         // Set the onClickListener for the favoriteReading view
                         favouriteReading.setOnClickListener {
                             val currentArticle = Article(
@@ -685,6 +717,8 @@ fetchTopHeadlines("Hot News")
                                 urlToImage = intent.getStringExtra("urlToImage") ?: ""
                             )
                             onFavoriteSelected(currentArticle)
+                            // Update UI of favouriteReading view
+                            updateFavoriteReadingUI(!isFavorite)
                         }
                         suggestedRecyclerView.adapter = catAdapter
 
@@ -745,11 +779,14 @@ fetchArticlesFromFirebase("Health")
                                     putExtra("urlToChrome", article.url)
                                     putExtra("defaultImageResId", R.drawable.no_image_placeholder)
                                     putExtra("categoryCode", categoryCode)
+                                    putExtra("isFavorite", isArticleFavorite(article))
                                 }
                                 startActivity(intent)
                             },
                             this@ReadingActivity
                         )
+                        val isFavorite = intent.getBooleanExtra("isFavorite", false)
+                        updateFavoriteReadingUI(isFavorite)
                         // Set the onClickListener for the favoriteReading view
                         favouriteReading.setOnClickListener {
                             val currentArticle = Article(
@@ -763,6 +800,8 @@ fetchArticlesFromFirebase("Health")
                                 urlToImage = intent.getStringExtra("urlToImage") ?: ""
                             )
                             onFavoriteSelected(currentArticle)
+                            // Update UI of favouriteReading view
+                            updateFavoriteReadingUI(!isFavorite)
                         }
                         suggestedRecyclerView.adapter = catAdapter
 
@@ -823,12 +862,14 @@ fetchArticlesFromFirebase("Health")
                                     putExtra("urlToChrome", article.url)
                                     putExtra("defaultImageResId", R.drawable.no_image_placeholder)
                                     putExtra("categoryCode", categoryCode)
-
+                                    putExtra("isFavorite", isArticleFavorite(article))
                                 }
                                 startActivity(intent)
                             },
                             this@ReadingActivity
                         )
+                        val isFavorite = intent.getBooleanExtra("isFavorite", false)
+                        updateFavoriteReadingUI(isFavorite)
                         // Set the onClickListener for the favoriteReading view
                         favouriteReading.setOnClickListener {
                             val currentArticle = Article(
@@ -842,6 +883,8 @@ fetchArticlesFromFirebase("Health")
                                 urlToImage = intent.getStringExtra("urlToImage") ?: ""
                             )
                             onFavoriteSelected(currentArticle)
+                            // Update UI of favouriteReading view
+                            updateFavoriteReadingUI(!isFavorite)
                         }
                         suggestedRecyclerView.adapter = catAdapter
 
@@ -903,11 +946,14 @@ fetchArticlesFromFirebase("Health")
                                     putExtra("urlToChrome", article.url)
                                     putExtra("defaultImageResId", R.drawable.no_image_placeholder)
                                     putExtra("categoryCode", categoryCode)
+                                    putExtra("isFavorite", isArticleFavorite(article))
                                 }
                                 startActivity(intent)
                             },
                             this@ReadingActivity
                         )
+                        val isFavorite = intent.getBooleanExtra("isFavorite", false)
+                        updateFavoriteReadingUI(isFavorite)
                         // Set the onClickListener for the favoriteReading view
                         favouriteReading.setOnClickListener {
                             val currentArticle = Article(
@@ -921,6 +967,8 @@ fetchArticlesFromFirebase("Health")
                                 urlToImage = intent.getStringExtra("urlToImage") ?: ""
                             )
                             onFavoriteSelected(currentArticle)
+                            // Update UI of favouriteReading view
+                            updateFavoriteReadingUI(!isFavorite)
                         }
                         suggestedRecyclerView.adapter = catAdapter
 
@@ -980,11 +1028,14 @@ val categoryCode=topHeadline
                                     putExtra("urlToChrome", article.url)
                                     putExtra("defaultImageResId", R.drawable.no_image_placeholder)
                                     putExtra("categoryCode", categoryCode)
+                                    putExtra("isFavorite", isArticleFavorite(article))
                                 }
                                 startActivity(intent)
                             },
                             this@ReadingActivity
                         )
+                        val isFavorite = intent.getBooleanExtra("isFavorite", false)
+                        updateFavoriteReadingUI(isFavorite)
 // Set the onClickListener for the favoriteReading view
                         favouriteReading.setOnClickListener {
                             val currentArticle = Article(
@@ -998,6 +1049,8 @@ val categoryCode=topHeadline
                                 urlToImage = intent.getStringExtra("urlToImage") ?: ""
                             )
                             onFavoriteSelected(currentArticle)
+                            // Update UI of favouriteReading view
+                            updateFavoriteReadingUI(!isFavorite)
                         }
                         suggestedRecyclerView.adapter = catAdapter
 
@@ -1102,6 +1155,8 @@ val categoryCode=topHeadline
                         urlToImage = intent.getStringExtra("urlToImage") ?: ""
                     )
                     onFavoriteSelected(currentArticle)
+                    // Update UI of favouriteReading view
+                    updateFavoriteReadingUI(true)
                 }
                 suggestedRecyclerView.adapter = catAdapter
                 Log.d("FirebaseData", "RecyclerView updated with Firebase data")
@@ -1112,6 +1167,23 @@ val categoryCode=topHeadline
                 Log.e("FirebaseError", "Error fetching data from Firebase: ${databaseError.message}")
             }
         })
+    }
+
+    private fun updateFavoriteReadingUI(isFavorite: Boolean) {
+        if (isFavorite) {
+            favouriteReading.setBackgroundResource(R.drawable.saved_bg) // set your favorite background
+            favouriteReading.findViewById<ImageView>(R.id.fav_image).setImageResource(R.drawable.saved_icon) // set your favorite icon
+        } else {
+            favouriteReading.setBackgroundResource(R.drawable.icons_bg) // set your default background
+            favouriteReading.findViewById<ImageView>(R.id.fav_image).setImageResource(R.drawable.favourite_icon) // set your default icon
+        }
+    }
+    private fun isArticleFavorite(article: Data1.Article): Boolean {
+        val sharedPreferences = this.getSharedPreferences("article_data", Context.MODE_PRIVATE)
+        val articleListJson = sharedPreferences.getString("articleList", null)
+        val type = object : TypeToken<MutableList<Data1.Article>>() {}.type
+        val existingArticleList: MutableList<Data1.Article> = Gson().fromJson(articleListJson, type) ?: mutableListOf()
+        return existingArticleList.any { it.title == article.title }
     }
 
 

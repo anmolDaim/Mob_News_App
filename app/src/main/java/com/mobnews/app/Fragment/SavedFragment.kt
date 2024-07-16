@@ -3,31 +3,39 @@ package com.mobnews.app.Fragment
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.text.TextUtils.replace
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatButton
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.mobnews.app.Adapter.savedAdapter
-import com.mobnews.app.DataClass.Data1
-import com.mobnews.app.DataClass.SavedDataClass
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdLoader
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.nativead.MediaView
+import com.google.android.gms.ads.nativead.NativeAd
+import com.google.android.gms.ads.nativead.NativeAdOptions
+import com.google.android.gms.ads.nativead.NativeAdView
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.mobnews.app.Activity.ReadingActivity
+import com.mobnews.app.Adapter.ItemsAdapter
+import com.mobnews.app.DataClass.Data1
 import com.mobnews.app.R
-import org.w3c.dom.Text
 
-
-class SavedFragment : Fragment(), savedAdapter.OnFavoriteSelectedListener {
+class SavedFragment : Fragment(), ItemsAdapter.OnFavoriteSelectedListener {
     private lateinit var savedArticlesRecyclerView: RecyclerView
-    lateinit var favText:TextView
-    lateinit var favImage:ImageView
-    lateinit var moveToHomePage:TextView
-    lateinit var Adapter:savedAdapter
+    private lateinit var favText: TextView
+    private lateinit var favImage: ImageView
+    private lateinit var moveToHomePage: TextView
+    private lateinit var adapter: ItemsAdapter
+    private var nativeAd: NativeAd? = null
+   // private lateinit var adFrameLarge: FrameLayout
 
     fun setData(bundle: Bundle) {
         arguments = bundle
@@ -39,10 +47,11 @@ class SavedFragment : Fragment(), savedAdapter.OnFavoriteSelectedListener {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_saved, container, false)
         savedArticlesRecyclerView = view.findViewById(R.id.savedArticlesRecyclerView)
-        favImage=view.findViewById(R.id.favImage)
-        favText=view.findViewById(R.id.favText)
-        moveToHomePage=view.findViewById(R.id.moveToHomePage)
-        moveToHomePage.setOnClickListener{
+        favImage = view.findViewById(R.id.favImage)
+        favText = view.findViewById(R.id.favText)
+        moveToHomePage = view.findViewById(R.id.moveToHomePage)
+       // adFrameLarge = view.findViewById(R.id.ad_frame_large)
+        moveToHomePage.setOnClickListener {
             parentFragmentManager.beginTransaction()
                 .replace(R.id.container, HomeFragment())
                 .addToBackStack(null)
@@ -50,156 +59,151 @@ class SavedFragment : Fragment(), savedAdapter.OnFavoriteSelectedListener {
         }
         return view
     }
-    override fun onResume() {
-        super.onResume()
-        loadSavedArticles()
-    }
 
-    private fun loadSavedArticles() {
-        val gson = Gson()
-        val sharedPreferences = requireContext().getSharedPreferences("article_data", Context.MODE_PRIVATE)
-
-        // Retrieve JSON string from SharedPreferences
-        val articleListJson = sharedPreferences.getString("articleList", null)
-
-        // Check if articleListJson is null or empty
-        if (articleListJson.isNullOrEmpty()) {
-            // Handle the case where the JSON string is null or empty
-            return
-        }
-
-        // Convert JSON string back to list
-        val type = object : TypeToken<MutableList<Data1.Article>>() {}.type
-        val articleList: MutableList<Data1.Article> = gson.fromJson(articleListJson, type)
-
-        val arrSaved = ArrayList<SavedDataClass>()
-        articleList.forEach { article ->
-            val savedData = SavedDataClass(
-                article.author ?: "",
-                article.title ?: "",
-                article.publishedAt ?: "",
-                article.urlToImage ?: "",
-                article.description?:"",
-                article.content?:"",
-                article.url?:""
-            )
-            arrSaved.add(0,savedData)
-        }
-
-        // Update RecyclerView with the new data
-        Adapter.updateList(arrSaved)
-
-        // Update visibility of views based on data availability
-        if (arrSaved.isEmpty()) {
-            savedArticlesRecyclerView.visibility = View.GONE
-            favText.visibility = View.VISIBLE
-            favImage.visibility = View.VISIBLE
-            moveToHomePage.visibility=View.VISIBLE
-        } else {
-            savedArticlesRecyclerView.visibility = View.VISIBLE
-            favText.visibility = View.GONE
-            favImage.visibility = View.GONE
-            moveToHomePage.visibility=View.GONE
-        }
-    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        val gson = Gson()
-//        val sharedPreferences = requireContext().getSharedPreferences("article_data", Context.MODE_PRIVATE)
-//
-//// Retrieve JSON string from SharedPreferences
-//        val articleListJson = sharedPreferences.getString("articleList", null)
+        // Initialize RecyclerView and load articles
+        setupRecyclerView()
 
+        // Load native ad
+        //loadNativeAd()
+    }
+
+    private fun setupRecyclerView() {
         val gson = Gson()
         val sharedPreferences = requireContext().getSharedPreferences("article_data", Context.MODE_PRIVATE)
-
-        // Retrieve JSON string from SharedPreferences
         val articleListJson = sharedPreferences.getString("articleList", null)
-
-        // Check if articleListJson is null or empty
-        if (articleListJson.isNullOrEmpty()) {
-            // Handle the case where the JSON string is null or empty
-            return
-        }
-
-
-// Convert JSON string back to list
         val type = object : TypeToken<MutableList<Data1.Article>>() {}.type
-        val articleList: MutableList<Data1.Article> = gson.fromJson(articleListJson, type)
-
-        val arrSaved=ArrayList<SavedDataClass>()
-       // if (author != null && title != null && publishedAt != null && urlToImage != null) {
-         //   arrSaved.add(SavedDataClass(author, title, publishedAt, urlToImage))
-        //}
-        articleList.forEach { article ->
-            val savedData = SavedDataClass(
-                article.author ?: "",
-                article.title ?: "",
-                article.publishedAt ?: "",
-                article.urlToImage ?: "",
-                article.content?:"",
-                article.description?:"",
-                article.url?:""
-            )
-            arrSaved.add(savedData)
+        val articleList: MutableList<Data1.Article> = if (articleListJson != null) {
+            gson.fromJson(articleListJson, type)
+        } else {
+            mutableListOf()
         }
 
+        articleList.reverse()
 
-        val linearLayout=LinearLayoutManager(requireContext(),LinearLayoutManager.VERTICAL,false)
-        savedArticlesRecyclerView.layoutManager = linearLayout
-        Adapter = savedAdapter(arrSaved,onItemClick = { savedData ->
-            val intent = Intent(requireContext(), ReadingActivity::class.java).apply {
-                putExtra("author", savedData.authorSaved)
-                putExtra("content", savedData.titleSaved)
-                putExtra("description", savedData.description)
-                putExtra("publishedAt", savedData.publishSaved)
-                putExtra("title", savedData.titleSaved)
-                putExtra("urlToImage", savedData.imageSaved)
-                putExtra("urlToChrome", savedData.urlToChrome)
-                putExtra("defaultImageResId", R.drawable.no_image_placeholder)
-            }
+        adapter = ItemsAdapter(requireContext(), articleList, { article ->
+            val intent = Intent(requireContext(), ReadingActivity::class.java)
+            intent.putExtra("title", article.title)
+            intent.putExtra("publishedAt", article.publishedAt)
+            intent.putExtra("author", article.author)
+            intent.putExtra("urlToImage", article.urlToImage)
+            intent.putExtra("content", article.content)
+            intent.putExtra("urlToChrome", article.url)
+            intent.putExtra("isFavorite", isArticleFavorite(article))
             startActivity(intent)
-        },
-            listener = this
-        )
+        }, this)
 
-        savedArticlesRecyclerView.adapter = Adapter
+        savedArticlesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        savedArticlesRecyclerView.adapter = adapter
 
-        if (arrSaved.isEmpty()) {
+        // Update visibility of views based on data availability
+        if (articleList.isEmpty()) {
             savedArticlesRecyclerView.visibility = View.GONE
             favText.visibility = View.VISIBLE
             favImage.visibility = View.VISIBLE
+            moveToHomePage.visibility = View.VISIBLE
+            //adFrameLarge.visibility = View.VISIBLE
         } else {
             savedArticlesRecyclerView.visibility = View.VISIBLE
             favText.visibility = View.GONE
             favImage.visibility = View.GONE
+            moveToHomePage.visibility = View.GONE
+           // adFrameLarge.visibility = View.VISIBLE
         }
     }
 
-    override fun onDeleteSelected(article: SavedDataClass, position: Int) {
-        Adapter.removeItem(position)
-        removeFromSharedPreferences(article)
+
+    private fun isArticleFavorite(article: Data1.Article): Boolean {
+        val sharedPreferences = requireActivity().getSharedPreferences("article_data", Context.MODE_PRIVATE)
+        val articleListJson = sharedPreferences.getString("articleList", null)
+        val type = object : TypeToken<MutableList<Data1.Article>>() {}.type
+        val existingArticleList: MutableList<Data1.Article> = Gson().fromJson(articleListJson, type) ?: mutableListOf()
+        return existingArticleList.any { it.title == article.title }
     }
 
-    fun removeFromSharedPreferences(article: SavedDataClass) {
-        val prefs = requireContext().getSharedPreferences("article_data", Context.MODE_PRIVATE)
+//    private fun populateLargeNativeAdView(nativeAd: NativeAd, adView: NativeAdView) {
+//        adView.headlineView = adView.findViewById(R.id.ad_headline_large)
+//        adView.callToActionView = adView.findViewById(R.id.ad_call_to_action_large)
+//        adView.iconView = adView.findViewById(R.id.ad_app_icon_large)
+//        adView.bodyView = adView.findViewById(R.id.ad_body_large)
+//        adView.mediaView = adView.findViewById(R.id.ad_media_large) as MediaView
+//
+//        (adView.headlineView as TextView).text = nativeAd.headline
+//        (adView.bodyView as TextView).text = nativeAd.body
+//        (adView.callToActionView as AppCompatButton).text = nativeAd.callToAction
+//
+//        nativeAd.icon?.let {
+//            (adView.iconView as ImageView).setImageDrawable(it.drawable)
+//            adView.iconView?.visibility = View.VISIBLE
+//        } ?: run {
+//            adView.iconView?.visibility = View.GONE
+//        }
+//
+//        adView.setNativeAd(nativeAd)
+//    }
+
+//    private fun loadNativeAd() {
+//        val adLoader = AdLoader.Builder(requireContext(), "ca-app-pub-1095072040188201/4577807479")
+//            .forNativeAd { ad: NativeAd ->
+//                nativeAd?.destroy()
+//                nativeAd = ad
+//                val adView = layoutInflater.inflate(R.layout.ad_large_native, adFrameLarge, false) as NativeAdView
+//                populateLargeNativeAdView(ad, adView)
+//                adFrameLarge.removeAllViews()
+//                adFrameLarge.addView(adView)
+//            }
+//            .withAdListener(object : AdListener() {
+//                override fun onAdFailedToLoad(adError: LoadAdError) {
+//                    // Handle the failure by logging, altering the UI, etc.
+//                }
+//            })
+//            .build()
+//
+//        adLoader.loadAd(AdRequest.Builder().build())
+//    }
+
+    override fun onFavoriteSelected(article: Data1.Article) {
+        // Implement the logic to remove the article from favorites
+        val sharedPreferences = requireContext().getSharedPreferences("article_data", Context.MODE_PRIVATE)
         val gson = Gson()
-        val json = prefs.getString("articleList", null)
-        val type = object : TypeToken<ArrayList<Data1.Article>>() {}.type
-        val articleList: ArrayList<Data1.Article> = gson.fromJson(json, type) ?: ArrayList()
+        val articleListJson = sharedPreferences.getString("articleList", null)
+        val type = object : TypeToken<MutableList<Data1.Article>>() {}.type
+        val articleList: MutableList<Data1.Article> = gson.fromJson(articleListJson, type)
 
-        // Find the index of the article to remove
-        val index = articleList.indexOfFirst { it.author == article.authorSaved && it.title == article.titleSaved }
+        val iterator = articleList.iterator()
+        while (iterator.hasNext()) {
+            val savedArticle = iterator.next()
+            if (savedArticle.title == article.title) {
+                iterator.remove()
+                break
+            }
+        }
 
-        // Remove the article from the list if found
-        if (index != -1) {
-            articleList.removeAt(index)
-            // Save the updated list back to SharedPreferences
-            prefs.edit().putString("articleList", gson.toJson(articleList)).apply()
+        val newArticleListJson = gson.toJson(articleList)
+        sharedPreferences.edit().putString("articleList", newArticleListJson).apply()
 
-            // Reload saved articles from SharedPreferences
-            loadSavedArticles()
+        // Remove the article from the adapter's list and notify the adapter
+        val position = adapter.listArr.indexOf(article)
+        if (position != -1) {
+            adapter.removeItem(position)
+            adapter.unmarkAsFavorite(article)
+        }
+
+        // Update visibility of views based on data availability
+        if (articleList.isEmpty()) {
+            savedArticlesRecyclerView.visibility = View.GONE
+            favText.visibility = View.VISIBLE
+            favImage.visibility = View.VISIBLE
+            moveToHomePage.visibility = View.VISIBLE
+            //adFrameLarge.visibility = View.VISIBLE
+        } else {
+            savedArticlesRecyclerView.visibility = View.VISIBLE
+            favText.visibility = View.GONE
+            favImage.visibility = View.GONE
+            moveToHomePage.visibility = View.GONE
+            //adFrameLarge.visibility = View.GONE
         }
     }
 }

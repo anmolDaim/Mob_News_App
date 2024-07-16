@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Mob News</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="app_id">ca-app-pub-1095072040188201~9471488617</string>
+    <string name="unit_id">ca-app-pub-1095072040188201/9830581263</string>
+    <string name="native_ads">ca-app-pub-1095072040188201/4577807479</string>
+    <string name="investors_com_quot">investors.com\"</string>
+</resources>

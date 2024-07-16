@@ -92,4 +92,27 @@
         app:layout_constraintStart_toStartOf="@+id/videoHeading"
         app:layout_constraintTop_toBottomOf="@+id/videoHeading"
         app:srcCompat="@drawable/clock_icon" />
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="@dimen/widget_size_20"
+        android:layout_height="@dimen/widget_size_20"
+        android:layout_marginStart="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/videoDate"
+        app:layout_constraintStart_toEndOf="@+id/videoDate"
+        app:layout_constraintTop_toTopOf="@+id/videoDate"
+        app:srcCompat="@drawable/reading_profile_icon" />
+
+    <TextView
+        android:id="@+id/videoAuthor"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:fontFamily="@font/lato_bold"
+        android:text="null"
+        android:textColor="@color/lightGrey"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView5"
+        app:layout_constraintEnd_toEndOf="@+id/videoHeading"
+        app:layout_constraintStart_toEndOf="@+id/imageView5"
+        app:layout_constraintTop_toTopOf="@+id/imageView5" />
 </androidx.constraintlayout.widget.ConstraintLayout>

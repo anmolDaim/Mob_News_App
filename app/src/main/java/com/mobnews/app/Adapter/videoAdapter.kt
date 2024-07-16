@@ -20,6 +20,7 @@ class videoAdapter(val videoArr:List<videoDataClass>):RecyclerView.Adapter<video
         val videoImage:ImageView=itemView.findViewById(R.id.videoImage)
         val videoHeading:TextView=itemView.findViewById(R.id.videoHeading)
         val videoDate:TextView=itemView.findViewById(R.id.videoDate)
+        val videoAuthor:TextView=itemView.findViewById(R.id.videoAuthor)
 
     }
 
@@ -35,6 +36,7 @@ class videoAdapter(val videoArr:List<videoDataClass>):RecyclerView.Adapter<video
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val Current=videoArr[position]
         holder.videoHeading.setText(Current.videoHeading)
+        holder.videoAuthor.setText(Current.videoAuthor)
         // Extract the date portion up to 'T' letter from the publishedAt string
         val indexOfT = Current.videoDate?.indexOf('T')
         val dateSubstring = if (indexOfT != -1) {
@@ -58,6 +60,7 @@ class videoAdapter(val videoArr:List<videoDataClass>):RecyclerView.Adapter<video
                 putExtra("VIDEO_IMAGE_URL", Current.videoImage)
                 putExtra("VIDEO_CONTENT", Current.content)
                 putExtra("VIDEO_URL", Current.sourceUrl)
+                putExtra("AUTHOR",Current.videoAuthor)
             }
             holder.itemView.context.startActivity(intent)
         }

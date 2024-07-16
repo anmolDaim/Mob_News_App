@@ -39,6 +39,7 @@ import com.google.gson.reflect.TypeToken
 import com.mobnews.app.Activity.NotificationActivity
 import com.mobnews.app.Activity.ReadingActivity
 import com.mobnews.app.Activity.SearchActivity
+import com.mobnews.app.Adapter.savedAdapter
 import com.mobnews.app.ApiInterface.ApiInterface
 import com.mobnews.app.R
 import okhttp3.OkHttpClient
@@ -64,7 +65,7 @@ class HomeFragment : Fragment(), ItemsAdapter.OnFavoriteSelectedListener {
     lateinit var categoryRecyclerView:RecyclerView
     private lateinit var article: Data1.Article
     private val gson = Gson()
-    lateinit var adView: AdView
+   // lateinit var adView: AdView
     lateinit var sharedPreferences: SharedPreferences
     lateinit var notiConstraintLayout:ConstraintLayout
     lateinit var searchConstraintLayout:ConstraintLayout
@@ -93,7 +94,7 @@ class HomeFragment : Fragment(), ItemsAdapter.OnFavoriteSelectedListener {
         notificationDot=view.findViewById(R.id.notificationDot)
         sharedPreferences = requireContext().getSharedPreferences("notifications", Context.MODE_PRIVATE)
         MobileAds.initialize(requireContext()) {}
-        adView = view.findViewById(R.id.adView)
+       // adView = view.findViewById(R.id.adView)
         return view
     }
 
@@ -101,8 +102,8 @@ class HomeFragment : Fragment(), ItemsAdapter.OnFavoriteSelectedListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adRequest = AdRequest.Builder().build()
-        adView.loadAd(adRequest)
+//        val adRequest = AdRequest.Builder().build()
+//        adView.loadAd(adRequest)
 
 
         notiConstraintLayout.setOnClickListener {
@@ -207,6 +208,7 @@ class HomeFragment : Fragment(), ItemsAdapter.OnFavoriteSelectedListener {
                                     putExtra("urlToChrome", article.url)
                                     putExtra("defaultImageResId", R.drawable.no_image_placeholder)
                                     putExtra("categoryCode", categoryCode)
+                                    putExtra("isFavorite", isArticleFavorite(article))
                                 }
                                 startActivity(intent)
                             },
@@ -293,6 +295,7 @@ class HomeFragment : Fragment(), ItemsAdapter.OnFavoriteSelectedListener {
                                     putExtra("urlToChrome", article.url)
                                     putExtra("defaultImageResId", R.drawable.no_image_placeholder)
                                     putExtra("categoryCode", categoryCode)
+                                    putExtra("isFavorite", isArticleFavorite(article))
                                 }
                                 startActivity(intent)
                             },
@@ -379,6 +382,7 @@ class HomeFragment : Fragment(), ItemsAdapter.OnFavoriteSelectedListener {
                                     putExtra("urlToChrome", article.url)
                                     putExtra("defaultImageResId", R.drawable.no_image_placeholder)
                                     putExtra("categoryCode", categoryCode)
+                                    putExtra("isFavorite", isArticleFavorite(article))
                                 }
                                 startActivity(intent)
                             },
@@ -464,6 +468,7 @@ class HomeFragment : Fragment(), ItemsAdapter.OnFavoriteSelectedListener {
                                     putExtra("urlToChrome", article.url)
                                     putExtra("defaultImageResId", R.drawable.no_image_placeholder)
                                     putExtra("categoryCode", categoryCode)
+                                    putExtra("isFavorite", isArticleFavorite(article))
                                 }
                                 startActivity(intent)
                             },
@@ -549,6 +554,7 @@ class HomeFragment : Fragment(), ItemsAdapter.OnFavoriteSelectedListener {
                                     putExtra("urlToChrome", article.url)
                                     putExtra("defaultImageResId", R.drawable.no_image_placeholder)
                                     putExtra("categoryCode", categoryCode)
+                                    putExtra("isFavorite", isArticleFavorite(article))
                                 }
                                 startActivity(intent)
                             },
@@ -633,7 +639,7 @@ class HomeFragment : Fragment(), ItemsAdapter.OnFavoriteSelectedListener {
                                     putExtra("urlToChrome", article.url)
                                     putExtra("defaultImageResId", R.drawable.no_image_placeholder)
                                     putExtra("categoryCode", categoryCode)
-
+                                    putExtra("isFavorite", isArticleFavorite(article))
                                 }
                                 startActivity(intent)
                             },
@@ -718,6 +724,7 @@ class HomeFragment : Fragment(), ItemsAdapter.OnFavoriteSelectedListener {
                                     putExtra("urlToChrome", article.url)
                                     putExtra("defaultImageResId", R.drawable.no_image_placeholder)
                                     putExtra("categoryCode", categoryCode)
+                                    putExtra("isFavorite", isArticleFavorite(article))
                                 }
                                 startActivity(intent)
                             },
@@ -803,7 +810,7 @@ class HomeFragment : Fragment(), ItemsAdapter.OnFavoriteSelectedListener {
                                     putExtra("urlToImage", article.urlToImage)
                                     putExtra("urlToChrome", article.url)
                                     putExtra("defaultImageResId", R.drawable.no_image_placeholder)
-
+                                    putExtra("isFavorite", isArticleFavorite(article))
                                 }
                                 startActivity(intent)
                             },
@@ -912,6 +919,7 @@ class HomeFragment : Fragment(), ItemsAdapter.OnFavoriteSelectedListener {
                             intent.putExtra("urlToImage", article.urlToImage)
                             intent.putExtra("urlToChrome", article.url)
                             intent.putExtra("defaultImageResId", R.drawable.no_image_placeholder)
+                           intent.putExtra("isFavorite", isArticleFavorite(article))
                             startActivity(intent)
                         }
                         viewPager2.adapter = adapter
@@ -1031,6 +1039,7 @@ class HomeFragment : Fragment(), ItemsAdapter.OnFavoriteSelectedListener {
                     intent.putExtra("urlToImage", article.urlToImage)
                     intent.putExtra("urlToChrome", article.url)
                     intent.putExtra("defaultImageResId", R.drawable.no_image_placeholder)
+                    intent.putExtra("isFavorite", isArticleFavorite(article))
                     startActivity(intent)
                 }
                 viewPager2.adapter = adapter
@@ -1056,29 +1065,41 @@ class HomeFragment : Fragment(), ItemsAdapter.OnFavoriteSelectedListener {
         val existingArticleList: MutableList<Data1.Article> = gson.fromJson(articleListJson, type) ?: mutableListOf()
 
         // Check if the article already exists in the list
-        if (existingArticleList.any { it.title == article.title }) {
-            Toast.makeText(context, "You already added this item", Toast.LENGTH_SHORT).show()
-            return
+        val existingArticle = existingArticleList.find { it.title == article.title }
+
+        if (existingArticle != null) {
+            // Remove the article from the existing list
+            existingArticleList.remove(existingArticle)
+
+            // Convert the updated list to JSON string
+            val updatedArticleListJson = gson.toJson(existingArticleList)
+
+            // Store the updated JSON string in SharedPreferences
+            editor.putString("articleList", updatedArticleListJson)
+            editor.apply()
+
+            Toast.makeText(context, "Removed from favourites", Toast.LENGTH_SHORT).show()
+
+            // Notify the adapter about the item removal
+            (newsRecyclerView.adapter as ItemsAdapter).unmarkAsFavorite(article)
+        } else {
+            // Add the new article to the existing list
+            existingArticleList.add(article)
+
+            // Convert the updated list to JSON string
+            val updatedArticleListJson = gson.toJson(existingArticleList)
+
+            // Store the updated JSON string in SharedPreferences
+            editor.putString("articleList", updatedArticleListJson)
+            editor.apply()
+
+            Toast.makeText(context, "Added to favorites", Toast.LENGTH_SHORT).show()
+
+            // Notify the adapter about the item change
+            (newsRecyclerView.adapter as ItemsAdapter).markAsFavorite(article)
         }
-
-        // Add the new article to the existing list
-        existingArticleList.add(article)
-
-        // Convert the updated list to JSON string
-        val updatedArticleListJson = gson.toJson(existingArticleList)
-
-        // Store the updated JSON string in SharedPreferences
-        editor.putString("articleList", updatedArticleListJson)
-        editor.apply()
-
-        Toast.makeText(context, "Added successfully", Toast.LENGTH_SHORT).show()
-
-//        // Navigate to the SavedFragment
-//        parentFragmentManager.commit {
-//            replace(R.id.fragment_container, SavedFragment())
-//            addToBackStack(null)
-//        }
     }
+
 
     private fun fetchArticlesFromFirebase(categoryCode: String) {
 
@@ -1100,7 +1121,6 @@ class HomeFragment : Fragment(), ItemsAdapter.OnFavoriteSelectedListener {
                     val title = articleSnapshot.child("title").value as? String ?: ""
                     val url = articleSnapshot.child("url").value as? String ?: ""
                     val urlToImage = articleSnapshot.child("urlToImage").value as? String ?: ""
-
 
                     Log.d("FirebaseData", "Author: ${articleSnapshot.child("author").value}")
                     Log.d("FirebaseData", "Title: ${articleSnapshot.child("title").value}")
@@ -1175,5 +1195,13 @@ class HomeFragment : Fragment(), ItemsAdapter.OnFavoriteSelectedListener {
     }
     private val runnable= Runnable {
         viewPager2.currentItem=viewPager2.currentItem+1
+    }
+    // Function to check if an article is already favorite
+    private fun isArticleFavorite(article: Data1.Article): Boolean {
+        val sharedPreferences = requireActivity().getSharedPreferences("article_data", Context.MODE_PRIVATE)
+        val articleListJson = sharedPreferences.getString("articleList", null)
+        val type = object : TypeToken<MutableList<Data1.Article>>() {}.type
+        val existingArticleList: MutableList<Data1.Article> = Gson().fromJson(articleListJson, type) ?: mutableListOf()
+        return existingArticleList.any { it.title == article.title }
     }
 }

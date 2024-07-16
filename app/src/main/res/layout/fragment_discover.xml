@@ -21,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/searchBtn"
+            android:id="@+id/searchBtn1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="16dp"
@@ -33,7 +33,7 @@
 
 
             <ImageView
-                android:id="@+id/imageView5"
+                android:id="@+id/searchBtn"
                 android:layout_width="@dimen/widget_size_25"
                 android:layout_height="@dimen/widget_size_25"
                 android:src="@drawable/search_icon"
@@ -51,7 +51,7 @@
                 android:textSize="@dimen/font_size_17"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/moveProfile"
-                app:layout_constraintStart_toEndOf="@+id/imageView5"
+                app:layout_constraintStart_toEndOf="@+id/searchBtn"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
@@ -78,4 +78,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/searchLIstner" />
 
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        app:adSize="LARGE_BANNER"
+        app:adUnitId="@string/unit_id"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

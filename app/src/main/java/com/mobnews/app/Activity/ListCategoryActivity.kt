@@ -13,6 +13,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MobileAds
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -37,6 +40,7 @@ class ListCategoryActivity : AppCompatActivity(), ItemsAdapter.OnFavoriteSelecte
     lateinit var backBtn:ImageView
     lateinit var progressBar: ProgressBar
     lateinit var adapter:ItemsAdapter
+    lateinit var adView: AdView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_list_category)
@@ -44,6 +48,13 @@ class ListCategoryActivity : AppCompatActivity(), ItemsAdapter.OnFavoriteSelecte
         listCategoryRecyclerView=findViewById(R.id.listCategoryRecyclerView)
         progressBar=findViewById(R.id.progressBar)
         backBtn=findViewById(R.id.backBtn)
+
+        MobileAds.initialize(this) {}
+        adView = findViewById(R.id.adView)
+
+
+        val adRequest = AdRequest.Builder().build()
+        adView.loadAd(adRequest)
 
         backBtn.setOnClickListener {
             super.onBackPressed()
@@ -779,6 +790,8 @@ val categoryCode:String=business
         editor.apply()
 
         Toast.makeText(this, "Added successfully", Toast.LENGTH_SHORT).show()
+        // Notify the adapter about the item change
+        (listCategoryRecyclerView.adapter as ItemsAdapter).markAsFavorite(article)
     }
 
 

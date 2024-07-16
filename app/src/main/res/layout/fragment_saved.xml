@@ -7,17 +7,7 @@
     android:background="@color/white"
     tools:context=".Fragment.SavedFragment">
 
-    <ImageView
-        android:id="@+id/favImage"
-        android:layout_width="@dimen/widget_size_200"
-        android:layout_height="@dimen/widget_size_200"
-        android:src="@drawable/reading_icon"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view2" />
+
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -55,6 +45,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
 
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/savedArticlesRecyclerView"
         android:layout_width="match_parent"
@@ -66,31 +57,42 @@
         app:layout_constraintTop_toBottomOf="@+id/view2"
         tools:listitem="@layout/saved_layout" />
 
-    <TextView
-        android:id="@+id/favText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:fontFamily="@font/lato_bold"
-        android:text="Add your Favourite"
-        android:textColor="@color/black"
-        android:textSize="@dimen/font_size_16"
+    <ImageView
+        android:id="@+id/favImage"
+        android:layout_width="@dimen/widget_size_120"
+        android:layout_height="@dimen/widget_size_120"
+        android:src="@drawable/reading_icon"
         android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="@+id/favImage"
-        app:layout_constraintStart_toStartOf="@+id/favImage"
-        app:layout_constraintTop_toBottomOf="@+id/favImage" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view2"
+        app:layout_constraintVertical_bias="0.383" />
+
+    <TextView
+                    android:id="@+id/favText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/lato_bold"
+                    android:text="Add your Favourite"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/font_size_16"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="@+id/favImage"
+                    app:layout_constraintStart_toStartOf="@+id/favImage"
+                    app:layout_constraintTop_toBottomOf="@+id/favImage" />
 
     <TextView
         android:id="@+id/moveToHomePage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:fontFamily="@font/lato_bold"
         android:text="Go to Home Page"
         android:textColor="@color/green"
+        android:textSize="@dimen/font_size_14"
         android:textStyle="bold"
         android:visibility="visible"
-        android:fontFamily="@font/lato_bold"
-        android:textSize="@dimen/font_size_14"
         app:layout_constraintEnd_toEndOf="@+id/favText"
         app:layout_constraintStart_toStartOf="@+id/favText"
         app:layout_constraintTop_toBottomOf="@+id/favText" />

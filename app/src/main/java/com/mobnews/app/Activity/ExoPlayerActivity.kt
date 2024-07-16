@@ -1,19 +1,18 @@
 package com.mobnews.app.Activity
 
-import androidx.appcompat.app.AppCompatActivity
+import android.net.Uri
 import android.os.Bundle
-import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.ui.PlayerView
-import com.google.android.exoplayer2.util.Util
 import com.mobnews.app.R
+import java.util.Collections
 
 class ExoPlayerActivity : AppCompatActivity() {
-    private var player: ExoPlayer? = null
-    private lateinit var playerView: PlayerView
-    private var isFullScreen = false
 
+    private lateinit var playerView: PlayerView
+    private var exoPlayer: ExoPlayer? = null
     private val newsUrls = arrayOf(
         "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
         "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
@@ -28,95 +27,43 @@ class ExoPlayerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_exo_player)
         playerView = findViewById(R.id.player_view)
-        initializePlayer()
-    }
+// Shuffle the newsUrls array
+        val shuffledUrls = newsUrls.toList()
+        Collections.shuffle(shuffledUrls)
 
-    private fun initializePlayer() {
-        player = ExoPlayer.Builder(this).apply {
-
-        }.build()
-            playerView.player =player
-
-        val shuffledUrls = newsUrls.toList().shuffled()
-        for (url in shuffledUrls) {
-            val mediaItem = MediaItem.Builder().setUri(url).build()
-            player!!.addMediaItem(mediaItem)
-        }
-            player!!.prepare()
-        player!!.playWhenReady = false
+        initializePlayer(shuffledUrls)
 
     }
 
-    override fun onStart() {
-        super.onStart()
-        if (Util.SDK_INT >= 24) {
-            initializePlayer()
-        }
-    }
+    private fun initializePlayer(shuffledUrls: List<String>) {
+        exoPlayer = ExoPlayer.Builder(this).build().also { exoPlayer ->
+            playerView.player = exoPlayer
 
-    override fun onResume() {
-        super.onResume()
-        if (Util.SDK_INT < 24 || player == null) {
-            hideSystemUI()
-        }
-    }
-    private fun hideSystemUI() {
-        window.decorView.systemUiVisibility = (
-                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                        or View.SYSTEM_UI_FLAG_FULLSCREEN
-                        or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                )
-        actionBar?.hide()
-    }
-    private fun showSystemUI() {
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-        actionBar?.show()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        if (Util.SDK_INT < 24) {
-            showSystemUI()
-        }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        if (Util.SDK_INT >= 24) {
-            releasePlayer()
+            val mediaItems = shuffledUrls.map { url ->
+                MediaItem.fromUri(Uri.parse(url))
+            }
+            exoPlayer.setMediaItems(mediaItems)
+            exoPlayer.prepare()
+            exoPlayer.playWhenReady = true
         }
     }
 
     private fun releasePlayer() {
-        player?.let {
-            it.release()
-            player = null
+        exoPlayer?.run {
+            playWhenReady = false
+            release()
         }
+        exoPlayer = null
     }
 
-    override fun onWindowFocusChanged(hasFocus: Boolean) {
-        super.onWindowFocusChanged(hasFocus)
-        if (hasFocus) {
-            if (isFullScreen) {
-                hideSystemUI()
-            }
-        } else {
-            if (isFullScreen) {
-                showSystemUI()
-            }
-        }
+    override fun onStop() {
+        super.onStop()
+        releasePlayer()
     }
 
-    fun toggleFullScreen() {
-        if (isFullScreen) {
-            showSystemUI()
-        } else {
-            hideSystemUI()
-        }
-        isFullScreen = !isFullScreen
+    override fun onDestroy() {
+        super.onDestroy()
+        releasePlayer()
     }
 
 }

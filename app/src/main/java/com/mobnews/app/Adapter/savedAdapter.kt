@@ -21,6 +21,8 @@ class savedAdapter(val savedArr: ArrayList<SavedDataClass>,
         fun onDeleteSelected(article: SavedDataClass, position: Int)
     }
 
+
+
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val AuthorName: TextView = itemView.findViewById(R.id.savedauthor)
         val TitleName: TextView = itemView.findViewById(R.id.savedTitle)

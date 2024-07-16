@@ -14,7 +14,5 @@
     <color name="pink">#E91E63</color>
     <color name="yellow">#FF9800</color>
     <color name="skyBlue">#2196F3</color>
-    <color name="checkbox_checked_dark">#FFFFFF</color> <!-- White for dark theme -->
-    <color name="checkbox_unchecked_dark">#FFFFFF</color> <!-- White for dark theme -->
-    <color name="checkbox_checked_tick_dark">#000000</color> <!-- Black tick mark for dark theme -->
+
 </resources>

@@ -11,16 +11,37 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.ads.nativead.NativeAd
 import com.mobnews.app.DataClass.Data1
+import com.mobnews.app.DataClass.SavedDataClass
 import com.mobnews.app.R
 import com.squareup.picasso.Picasso
 
 class ItemsAdapter(
     private val context: Context,
-    private var listArr: MutableList<Data1.Article>,
+    var listArr: MutableList<Data1.Article>,
     private val onItemClick: (Data1.Article) -> Unit,
     private val listener: OnFavoriteSelectedListener,
 
 ) : RecyclerView.Adapter<ItemsAdapter.ViewHolder>() {
+
+    private val favoriteArticles = mutableSetOf<String>()
+   // private val deletedPositions = mutableSetOf<Int>()
+
+    init {
+        loadFavorites()
+    }
+
+    private fun loadFavorites() {
+        val sharedPreferences = context.getSharedPreferences("article_data", Context.MODE_PRIVATE)
+        favoriteArticles.addAll(sharedPreferences.getStringSet("favoriteArticles", setOf()) ?: setOf())
+    }
+
+    private fun saveFavorites() {
+        val sharedPreferences = context.getSharedPreferences("article_data", Context.MODE_PRIVATE)
+        with(sharedPreferences.edit()) {
+            putStringSet("favoriteArticles", favoriteArticles)
+            apply()
+        }
+    }
 
     fun updateArticles(newArticles: MutableList<Data1.Article>) {
         listArr.clear() // Clear existing data
@@ -70,6 +91,13 @@ class ItemsAdapter(
     override fun getItemCount(): Int {
         return listArr.size
     }
+//    override fun onDeleteSelected(article: SavedDataClass, position: Int) {
+//        // Logic to find and update the corresponding article in listArr
+//        val articleToDelete = listArr.find { it.title == article.titleSaved }
+//        articleToDelete?.let {
+//            listener.unmarkAsFavorite(it)
+//        }
+//    }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentItem = listArr[position]
@@ -95,5 +123,32 @@ class ItemsAdapter(
         } else {
             Picasso.get().load(currentItem.urlToImage).into(holder.imageToUrl)
         }
+        // Check if the article is in the favorite list and update the UI accordingly
+        if (favoriteArticles.contains(currentItem.title)) {
+            holder.favoriteNews.setBackgroundResource(R.drawable.saved_bg) // set your favorite background
+            holder.favoriteNews.findViewById<ImageView>(R.id.favImage)
+                .setImageResource(R.drawable.saved_icon) // set your favorite icon
+        } else {
+            holder.favoriteNews.setBackgroundResource(R.drawable.icons_bg) // set your default background
+            holder.favoriteNews.findViewById<ImageView>(R.id.favImage)
+                .setImageResource(R.drawable.favourite_icon) // set your default icon
+        }
+
+
     }
+    fun markAsFavorite(article: Data1.Article) {
+        if (favoriteArticles.add(article.title!!)) {
+            saveFavorites()
+            notifyItemChanged(listArr.indexOf(article))
+        }
+    }
+    fun unmarkAsFavorite(article: Data1.Article) {
+        if (favoriteArticles.remove(article.title!!)) {
+            saveFavorites()
+            notifyItemChanged(listArr.indexOf(article))
+        }
+    }
+
+
+
 }

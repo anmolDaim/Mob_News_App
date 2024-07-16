@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.provider.Settings
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -40,13 +41,11 @@ class ProfileFragment : Fragment() {
     lateinit var termsAndConditionsConstraint:ConstraintLayout
     lateinit var privacyPolicyConstraint:ConstraintLayout
     lateinit var termsImage:ImageView
-    lateinit var signOutBtn:TextView
+    lateinit var fetchedemail:TextView
 
     private var isExpanded = false
     private var ClearExpanded = false
     private var aboutExpanded = false
-
-    lateinit var Register:TextView
 
     private var article: Data1.Article? = null
 
@@ -72,12 +71,11 @@ class ProfileFragment : Fragment() {
         cacheImage=view.findViewById(R.id.cacheImage)
         generalImage=view.findViewById(R.id.generalImage)
         aboutImage=view.findViewById(R.id.aboutImage)
-        Register=view.findViewById(R.id.Register)
         termsConstraint=view.findViewById(R.id.termsConstraint)
         privacyPolicyConstraint=view.findViewById(R.id.privacyPolicyConstraint)
         termsAndConditionsConstraint=view.findViewById(R.id.termsAndConditionsConstraint)
         termsImage=view.findViewById(R.id.termsImage)
-        signOutBtn=view.findViewById(R.id.signOutBtn)
+        fetchedemail=view.findViewById(R.id.fetchedEmail)
 
         return view
     }
@@ -85,15 +83,10 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Register.setOnClickListener {
-            val intent = Intent(requireContext(), RegisterActivity::class.java)
-            startActivity(intent)
-        }
+        val preferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        val email = preferences.getString("email", "") // Fetch the email
+        fetchedemail.text = email // Set the email to the TextView
 
-        signOutBtn.setOnClickListener(){
-            val intent=Intent(requireContext(), LoginActivity::class.java)
-            startActivity(intent)
-        }
         generalCnstraintLayout.setOnClickListener {
             if (isExpanded) {
                 // Wrap up

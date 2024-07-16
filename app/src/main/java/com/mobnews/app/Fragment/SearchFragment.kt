@@ -11,11 +11,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatButton
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdLoader
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.nativead.MediaView
+import com.google.android.gms.ads.nativead.NativeAd
+import com.google.android.gms.ads.nativead.NativeAdView
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -42,6 +52,7 @@ class SearchFragment : Fragment(), ItemsAdapter.OnFavoriteSelectedListener {
     lateinit var searchRecyclerView: RecyclerView
     private lateinit var itemAdapter: ItemsAdapter
     lateinit var crossIcon:ImageView
+    private var nativeAd: NativeAd? = null
 
 
     override fun onCreateView(
@@ -60,6 +71,8 @@ class SearchFragment : Fragment(), ItemsAdapter.OnFavoriteSelectedListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        loadNativeAd()
+
         itemAdapter = ItemsAdapter(
             requireContext(),
             mutableListOf(), // Start with an empty list
@@ -71,6 +84,7 @@ class SearchFragment : Fragment(), ItemsAdapter.OnFavoriteSelectedListener {
                     putExtra("publishedAt", article.publishedAt)
                     putExtra("title", article.title)
                     putExtra("urlToImage", article.urlToImage)
+                    putExtra("isFavorite", isArticleFavorite(article))
                 }
                 startActivity(intent)
             },
@@ -181,7 +195,6 @@ class SearchFragment : Fragment(), ItemsAdapter.OnFavoriteSelectedListener {
     }
 
     override fun onFavoriteSelected(article: Data1.Article) {
-
         val gson = Gson()
         val sharedPreferences = requireActivity().getSharedPreferences("article_data", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
@@ -191,16 +204,97 @@ class SearchFragment : Fragment(), ItemsAdapter.OnFavoriteSelectedListener {
         val type = object : TypeToken<MutableList<Data1.Article>>() {}.type
         val existingArticleList: MutableList<Data1.Article> = gson.fromJson(articleListJson, type) ?: mutableListOf()
 
-        // Add the new article to the existing list
-        existingArticleList.add(article)
+        // Check if the article already exists in the list
+        val existingArticle = existingArticleList.find { it.title == article.title }
 
-        // Convert the updated list to JSON string
-        val updatedArticleListJson = gson.toJson(existingArticleList)
+        if (existingArticle != null) {
+            // Remove the article from the existing list
+            existingArticleList.remove(existingArticle)
 
-        // Store the updated JSON string in SharedPreferences
-        editor.putString("articleList", updatedArticleListJson)
-        editor.apply()
-        Toast.makeText(requireContext(), "Added successfully", Toast.LENGTH_SHORT).show()
+            // Convert the updated list to JSON string
+            val updatedArticleListJson = gson.toJson(existingArticleList)
+
+            // Store the updated JSON string in SharedPreferences
+            editor.putString("articleList", updatedArticleListJson)
+            editor.apply()
+
+            Toast.makeText(context, "Removed from favorites", Toast.LENGTH_SHORT).show()
+
+            // Notify the adapter about the item removal
+            (searchRecyclerView.adapter as ItemsAdapter).unmarkAsFavorite(article)
+        } else {
+            // Add the new article to the existing list
+            existingArticleList.add(article)
+
+            // Convert the updated list to JSON string
+            val updatedArticleListJson = gson.toJson(existingArticleList)
+
+            // Store the updated JSON string in SharedPreferences
+            editor.putString("articleList", updatedArticleListJson)
+            editor.apply()
+
+            Toast.makeText(context, "Added to favorites", Toast.LENGTH_SHORT).show()
+
+            // Notify the adapter about the item change
+            (searchRecyclerView.adapter as ItemsAdapter).markAsFavorite(article)
+        }
+    }
+
+    private fun loadNativeAd() {
+        //val adUnitId = getString(R.string.native_ads) // Retrieve the ad unit ID from strings.xml
+
+        val adLoader = AdLoader.Builder(requireContext(), "ca-app-pub-1095072040188201/4577807479")
+            .forNativeAd { ad: NativeAd ->
+                nativeAd?.destroy()
+                nativeAd = ad
+                val adView = layoutInflater.inflate(R.layout.ad_large_native, null) as NativeAdView
+                populateLargeNativeAdView(ad, adView)
+                view?.findViewById<FrameLayout>(R.id.ad_frame_large)?.apply {
+                    removeAllViews()
+                    addView(adView)
+                }
+            }
+            .withAdListener(object : AdListener() {
+                override fun onAdFailedToLoad(adError: LoadAdError) {
+                    // Handle the failure by logging, altering the UI, etc.
+                }
+            })
+            .build()
+
+        adLoader.loadAd(AdRequest.Builder().build())
+    }
+
+    private fun populateLargeNativeAdView(nativeAd: NativeAd, adView: NativeAdView) {
+        adView.headlineView = adView.findViewById(R.id.ad_headline_large)
+        adView.callToActionView = adView.findViewById(R.id.ad_call_to_action_large)
+        adView.iconView = adView.findViewById(R.id.ad_app_icon_large)
+        adView.bodyView = adView.findViewById(R.id.ad_body_large)
+        adView.mediaView = adView.findViewById(R.id.ad_media_large) as MediaView
+
+        (adView.headlineView as TextView).text = nativeAd.headline
+        (adView.bodyView as TextView).text = nativeAd.body
+        (adView.callToActionView as AppCompatButton).text = nativeAd.callToAction
+
+        nativeAd.icon?.let {
+            (adView.iconView as ImageView).setImageDrawable(it.drawable)
+            adView.iconView?.visibility = View.VISIBLE
+        } ?: run {
+            adView.iconView?.visibility = View.GONE
+        }
+
+        adView.setNativeAd(nativeAd)
+    }
+    private fun isArticleFavorite(article: Data1.Article): Boolean {
+        val sharedPreferences = requireActivity().getSharedPreferences("article_data", Context.MODE_PRIVATE)
+        val articleListJson = sharedPreferences.getString("articleList", null)
+        val type = object : TypeToken<MutableList<Data1.Article>>() {}.type
+        val existingArticleList: MutableList<Data1.Article> = Gson().fromJson(articleListJson, type) ?: mutableListOf()
+        return existingArticleList.any { it.title == article.title }
+    }
+
+    override fun onDestroy() {
+        nativeAd?.destroy()
+        super.onDestroy()
     }
 
 }

@@ -3,15 +3,24 @@ package com.mobnews.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
+import android.os.RemoteException
 import android.preference.PreferenceManager
+import android.util.Log
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
+import com.android.installreferrer.api.InstallReferrerClient
+import com.android.installreferrer.api.InstallReferrerStateListener
+import com.android.installreferrer.api.ReferrerDetails
+import com.google.android.gms.ads.identifier.AdvertisingIdClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.mobnews.app.R
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import java.net.URLDecoder
 
 class LoginActivity : AppCompatActivity() {
     lateinit var login:AppCompatButton
@@ -22,6 +31,12 @@ class LoginActivity : AppCompatActivity() {
     var progressDialog: ProgressDialog? = null
     var nAuth: FirebaseAuth? = null
     var nUser: FirebaseUser? = null
+
+    private lateinit var mReferrerClient: InstallReferrerClient
+
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -84,4 +99,5 @@ class LoginActivity : AppCompatActivity() {
         startActivity(intent)
         finish()
     }
+
 }

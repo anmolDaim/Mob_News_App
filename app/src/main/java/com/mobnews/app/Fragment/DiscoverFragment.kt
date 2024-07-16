@@ -5,7 +5,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
@@ -13,9 +16,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdOptions
+import com.google.android.gms.ads.nativead.NativeAdView
 import com.mobnews.app.Activity.ListCategoryActivity
 import com.mobnews.app.Activity.SearchActivity
 import com.mobnews.app.Adapter.secondCatAdapter
@@ -26,38 +32,26 @@ import com.mobnews.app.R
 class DiscoverFragment : Fragment() {
     lateinit var secondCategoryRecyclerView:RecyclerView
     lateinit var moveProfile:ImageView
-    lateinit var searchLIstner:CardView
+    lateinit var searchLIstner:ImageView
+    lateinit var adView: AdView
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_discover, container, false)
         secondCategoryRecyclerView=view.findViewById(R.id.secondCategoryRecyclerView)
-        searchLIstner=view.findViewById(R.id.searchLIstner)
+        searchLIstner=view.findViewById(R.id.searchBtn)
         moveProfile=view.findViewById(R.id.moveProfile)
+        MobileAds.initialize(requireContext()) {}
+        adView = view.findViewById(R.id.adView)
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adLoader = AdLoader.Builder(requireContext(), "ca-app-pub-3940256099942544/2247696110")
-            .forNativeAd { ad : NativeAd ->
-                // Show the ad.
-            }
-            .withAdListener(object : AdListener() {
-                override fun onAdFailedToLoad(adError: LoadAdError) {
-                    // Handle the failure by logging, altering the UI, and so on.
-                }
-            })
-            .withNativeAdOptions(
-                NativeAdOptions.Builder()
-                // Methods in the NativeAdOptions.Builder class can be
-                // used here to specify individual options settings.
-                .build())
-            .build()
-
-        adLoader.loadAd(AdRequest.Builder().build())
+        val adRequest = AdRequest.Builder().build()
+        adView.loadAd(adRequest)
 
         moveProfile.setOnClickListener {
             val fragment = ProfileFragment() // Create a new instance of ProfileFragment
@@ -105,6 +99,10 @@ class DiscoverFragment : Fragment() {
         val intent = Intent(requireContext(), ListCategoryActivity::class.java)
         intent.putExtra("categoryName", categoryName)
         startActivity(intent)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
     }
 
 

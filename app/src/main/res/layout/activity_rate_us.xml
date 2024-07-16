@@ -67,10 +67,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
         android:fontFamily="@font/lato_bold"
-        android:text="Stay updated with the latest news from around the world with our comprehensive news application. Our app provides you with a curated selection of news articles covering various categories including politics, business, technology, sports, entertainment, and more. Whether you're interested in local news or global events, we've got you covered."
+        android:text="Stay updated with the latest news from around the world with our comprehensive news application."
+        android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="@dimen/font_size_16"
         app:layout_constraintEnd_toEndOf="parent"
@@ -80,43 +81,110 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/rateUsBtn"
-        android:layout_width="@dimen/widget_size_200"
+        android:layout_width="@dimen/widget_size_150"
         android:layout_height="@dimen/widget_size_40"
-        android:layout_marginTop="44dp"
-        android:background="@drawable/dark_mode_btn"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/saved_bg"
         android:text="Rate Us"
         android:textAllCaps="false"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="@+id/textView7"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="@+id/textView7"
-        app:layout_constraintTop_toBottomOf="@+id/textView9" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout6"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/widget_size_150"
+        android:background="@color/grey"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view2" >
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottieAnimationView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.505"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/lottie_rate_us" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <FrameLayout
+        android:id="@+id/ad_frame"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rateUsBtn" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="@+id/textView7"
+        app:layout_constraintStart_toStartOf="@+id/textView7"
+        app:layout_constraintTop_toBottomOf="@+id/textView7">
+
+        <ImageView
+
+            android:layout_width="@dimen/widget_size_40"
+            android:layout_height="@dimen/widget_size_40"
+            android:layout_margin="5dp"
+            app:srcCompat="@drawable/star_icon" />
+
+        <ImageView
+
+            android:layout_width="@dimen/widget_size_40"
+            android:layout_height="@dimen/widget_size_40"
+            android:layout_margin="5dp"
+            app:srcCompat="@drawable/star_icon" />
+
+        <ImageView
+
+            android:layout_width="@dimen/widget_size_40"
+            android:layout_height="@dimen/widget_size_40"
+            android:layout_margin="5dp"
+            app:srcCompat="@drawable/star_icon" />
+
+        <ImageView
+
+            android:layout_width="@dimen/widget_size_40"
+            android:layout_height="@dimen/widget_size_40"
+            android:layout_margin="5dp"
+            app:srcCompat="@drawable/star_icon" />
+
+        <ImageView
+
+            android:layout_width="@dimen/widget_size_40"
+            android:layout_height="@dimen/widget_size_40"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+            app:srcCompat="@drawable/star_icon" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/textView8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="Description"
+        android:text="Your opinion matters to us!"
         android:textColor="@color/black"
         android:fontFamily="@font/lato_bold"
-        android:textSize="@dimen/font_size_16"
+        android:textSize="@dimen/font_size_21"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view2" />
-
-    <TextView
-        android:id="@+id/textView9"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:text="Rate us on Playstore"
-        android:textColor="@color/black"
-        android:textSize="@dimen/font_size_17"
-        android:fontFamily="@font/lato_bold"
-        app:layout_constraintEnd_toEndOf="@+id/textView7"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="@+id/textView7"
-        app:layout_constraintTop_toBottomOf="@+id/textView7" />
-
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout6" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,6 +3,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="green">#388E01</color>
+    <color name="light_green">#C7F8A8</color>
     <color name="darkGrey">#1A1A1A</color>
     <color name="lightGrey">#5C5C5C</color>
     <color name="grey">#DDDADA</color>
@@ -18,8 +19,5 @@
     <color name="cat_bg">#F3F1F1</color>
     //49AE09
     <color name="splash_green">#49AE09</color>
-    <color name="checkbox_checked_light">#000000</color> <!-- Black for light theme -->
-    <color name="checkbox_unchecked_light">#000000</color> <!-- Black for light theme -->
-    <color name="checkbox_checked_tick_light">#FFFFFF</color> <!-- White tick mark for light theme -->
 
 </resources>

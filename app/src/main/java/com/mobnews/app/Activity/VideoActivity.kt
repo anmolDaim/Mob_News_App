@@ -54,6 +54,7 @@ class VideoActivity : AppCompatActivity(), ItemsAdapter.OnFavoriteSelectedListen
     lateinit var shareReading: ConstraintLayout
     lateinit var fontSizeReading: ConstraintLayout
     lateinit var adView:AdView
+    lateinit var authortextView:TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,6 +72,7 @@ class VideoActivity : AppCompatActivity(), ItemsAdapter.OnFavoriteSelectedListen
         disclaimerVideo=findViewById(R.id.disclaimerVideo)
         httpSource=findViewById(R.id.httpSource)
         shareReading=findViewById(R.id.shareEntertainment)
+        authortextView=findViewById(R.id.authortextView)
         // Initialize the Mobile Ads SDK
         MobileAds.initialize(this) {}
         //FontSizeHelper.init(this)
@@ -152,11 +154,13 @@ class VideoActivity : AppCompatActivity(), ItemsAdapter.OnFavoriteSelectedListen
         } else {
             videoDate
         }
+        val videoAuthor=intent.getStringExtra("AUTHOR")
         val videoContent = intent.getStringExtra("VIDEO_CONTENT")
         val videoImageUrl = intent.getStringExtra("VIDEO_IMAGE_URL")
         val sourceUrl = intent.getStringExtra("VIDEO_URL")
 
         // Set the retrieved data to the TextViews
+        authortextView.text=videoAuthor
         videoHeadingTextView.text = videoHeading
         videoDateTextView.text = dateSubstring.toString()
         videoContentTextView.text = videoContent
@@ -170,7 +174,7 @@ class VideoActivity : AppCompatActivity(), ItemsAdapter.OnFavoriteSelectedListen
         val fullNewsSourceString = "$newsSourceString$sourceUrl"
         val spannedNewsSourceString = SpannableString(fullNewsSourceString)
         val greenColor = ContextCompat.getColor(this, R.color.green)
-        val blackColor = ContextCompat.getColor(this, R.color.black)
+        val blackColor = ContextCompat.getColor(this, R.color.skyBlue)
         spannedNewsSourceString.setSpan(
             ForegroundColorSpan(greenColor),
             0,
@@ -357,6 +361,7 @@ class VideoActivity : AppCompatActivity(), ItemsAdapter.OnFavoriteSelectedListen
                         putExtra("urlToChrome", article.url)
                         putExtra("defaultImageResId", R.drawable.no_image_placeholder)
                         putExtra("categoryCode", categoryCode)
+                        putExtra("isFavorite", isArticleFavorite(article))
                     }
                     startActivity(intent)
                 }, this@VideoActivity)
@@ -377,30 +382,52 @@ class VideoActivity : AppCompatActivity(), ItemsAdapter.OnFavoriteSelectedListen
 
         // Retrieve existing article list from SharedPreferences
         val articleListJson = sharedPreferences.getString("articleList", null)
-
-        // Correct the usage of TypeToken
         val type = object : TypeToken<MutableList<Data1.Article>>() {}.type
         val existingArticleList: MutableList<Data1.Article> = gson.fromJson(articleListJson, type) ?: mutableListOf()
 
         // Check if the article already exists in the list
-        if (existingArticleList.any { it.title == article.title }) {
-            Toast.makeText(this, "You already added this item", Toast.LENGTH_SHORT).show()
-            return
+        val existingArticle = existingArticleList.find { it.title == article.title }
+
+        if (existingArticle != null) {
+            // Remove the article from the existing list
+            existingArticleList.remove(existingArticle)
+
+            // Convert the updated list to JSON string
+            val updatedArticleListJson = gson.toJson(existingArticleList)
+
+            // Store the updated JSON string in SharedPreferences
+            editor.putString("articleList", updatedArticleListJson)
+            editor.apply()
+
+            Toast.makeText(this, "Removed from favorites", Toast.LENGTH_SHORT).show()
+
+            // Notify the adapter about the item removal
+            (sugestedRecyclerView.adapter as ItemsAdapter).unmarkAsFavorite(article)
+        } else {
+            // Add the new article to the existing list
+            existingArticleList.add(article)
+
+            // Convert the updated list to JSON string
+            val updatedArticleListJson = gson.toJson(existingArticleList)
+
+            // Store the updated JSON string in SharedPreferences
+            editor.putString("articleList", updatedArticleListJson)
+            editor.apply()
+
+            Toast.makeText(this, "Added to favorites", Toast.LENGTH_SHORT).show()
+
+            // Notify the adapter about the item change
+            (sugestedRecyclerView.adapter as ItemsAdapter).markAsFavorite(article)
         }
-
-        // Add the new article to the existing list
-        existingArticleList.add(article)
-
-        // Convert the updated list to JSON string
-        val updatedArticleListJson = gson.toJson(existingArticleList)
-
-        // Store the updated JSON string in SharedPreferences
-        editor.putString("articleList", updatedArticleListJson)
-        editor.apply()
-
-        Toast.makeText(this, "Added successfully", Toast.LENGTH_SHORT).show()
     }
 
+    private fun isArticleFavorite(article: Data1.Article): Boolean {
+        val sharedPreferences = this.getSharedPreferences("article_data", Context.MODE_PRIVATE)
+        val articleListJson = sharedPreferences.getString("articleList", null)
+        val type = object : TypeToken<MutableList<Data1.Article>>() {}.type
+        val existingArticleList: MutableList<Data1.Article> = Gson().fromJson(articleListJson, type) ?: mutableListOf()
+        return existingArticleList.any { it.title == article.title }
+    }
 
 
     // Inside your activity class

@@ -33,7 +33,7 @@
                     android:layout_gravity="center"
                     android:layout_marginStart="16dp"
                     android:fontFamily="@font/lato_bold"
-                    android:text="Happy Reading"
+                    android:text="Detailed Reading"
                     android:textColor="@color/black"
                     android:textSize="@dimen/font_size_17"
                     app:layout_constraintBottom_toBottomOf="@+id/constraintLayout"
@@ -92,8 +92,10 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <ImageView
+                        android:id="@+id/fav_image"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
+                        android:padding="2dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -202,16 +204,22 @@
                 android:layout_marginTop="16dp"
                 android:orientation="horizontal"
                 android:weightSum="1"
+                android:gravity="center"
                 app:layout_constraintEnd_toEndOf="@+id/titleTextView"
                 app:layout_constraintStart_toStartOf="@+id/titleTextView"
                 app:layout_constraintTop_toBottomOf="@+id/titleTextView">
 
+                <ImageView
+                    android:layout_width="@dimen/widget_size_20"
+                    android:layout_height="@dimen/widget_size_20"
+                    android:src="@drawable/reading_profile_icon"/>
                 <TextView
                     android:id="@+id/authortextView"
                     android:layout_width="@dimen/widget_size_120"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/lato_bold"
                     android:text="Karen Gilchrist"
+                    android:layout_marginStart="8dp"
                     android:textColor="@color/lightGrey"
                     android:textSize="@dimen/font_size_14"
                     app:layout_constraintStart_toStartOf="@+id/titleTextView"
@@ -220,8 +228,7 @@
                 <ImageView
                     android:layout_width="@dimen/widget_size_20"
                     android:layout_height="@dimen/widget_size_20"
-                    android:src="@drawable/clock_icon"
-                    android:layout_marginStart="20dp"/>
+                    android:src="@drawable/clock_icon" />
 
                 <TextView
                     android:id="@+id/DateTextView"
@@ -286,7 +293,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:fontFamily="@font/lato_bold"
-                android:text="Suggested"
+                android:text="Relevant News"
                 android:textColor="@color/black"
                 android:textSize="@dimen/font_size_17"
                 app:layout_constraintStart_toStartOf="@+id/disclaimer"

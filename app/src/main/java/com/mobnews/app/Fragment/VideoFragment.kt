@@ -9,6 +9,9 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MobileAds
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -31,6 +34,7 @@ class VideoFragment : Fragment() {
 
     private lateinit var videoRecyclerView: RecyclerView
     private lateinit var progressBar7: ProgressBar
+    lateinit var adView: AdView
 
     private val retrofit by lazy {
         val logging = HttpLoggingInterceptor()
@@ -57,12 +61,17 @@ class VideoFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_video, container, false)
         videoRecyclerView = view.findViewById(R.id.videoRecyclerView)
         progressBar7 = view.findViewById(R.id.progressBar7)
+        MobileAds.initialize(requireContext()) {}
+        adView = view.findViewById(R.id.adView)
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         progressBar7.visibility = View.VISIBLE
+
+        val adRequest = AdRequest.Builder().build()
+        adView.loadAd(adRequest)
 
         fetchDataFromApi()
     }
@@ -78,12 +87,14 @@ class VideoFragment : Fragment() {
                     if (response.isSuccessful) {
                         response.body()?.let { data1 ->
                             val videoList = data1.articles.filter { article ->
+                                !article.author.isNullOrEmpty() &&
                                 !article.urlToImage.isNullOrEmpty() &&
                                         !article.title.isNullOrEmpty() &&
                                         !article.publishedAt.isNullOrEmpty() &&
                                         !article.url.isNullOrEmpty()
                             }.map { article ->
                                 videoDataClass(
+                                    videoAuthor = article.author?:"",
                                     videoImage = article.urlToImage ?: "",
                                     videoHeading = article.title ?: "No Title",
                                     videoDate = article.publishedAt ?: "No Date",
@@ -129,6 +140,7 @@ class VideoFragment : Fragment() {
 
                     if (author.isNotEmpty() && title.isNotEmpty() && urlToImage.isNotEmpty()) {
                         val article = videoDataClass(
+                            author,
                             urlToImage,
                             title,
                             publishedAt,

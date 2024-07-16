@@ -172,4 +172,6 @@
 -keep,allowobfuscation,allowshrinking class com.google.gson.reflect.TypeToken
 -keep,allowobfuscation,allowshrinking class * extends com.google.gson.reflect.TypeToken
 
+
+
 ##---------------End: proguard configuration for Gson  ----------
